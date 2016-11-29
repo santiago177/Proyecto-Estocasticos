@@ -62,8 +62,9 @@ public class NIC implements Runnable{
 					//System.out.println(System.currentTimeMillis() - start+" in server added");
 					Simulation.data[target].arrival_times.add(System.currentTimeMillis() - start);
 					double net_delay = data.send_delay;
-					long delay = (long)(Simulation.exp_random(1.0/net_delay) + Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
-					//System.out.printf("%d server delay %d\n", id, delay);
+					long r1 = (long)(Simulation.exp_random(1.0/net_delay));
+					long delay = r1 + (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
+					//System.out.printf("%d server delay %d net_delay %f r %d\n", id, delay, net_delay, r1);
 					Thread.sleep(delay);							
 				}
 				//System.out.printf("%d server closed\n", id);

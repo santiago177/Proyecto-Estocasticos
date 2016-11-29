@@ -28,9 +28,9 @@ public class Simulation {
 		hosts[0] = new Host(0, start, sim_time);	
 		hosts[1] = new Host(1, start, sim_time);
 		hosts[2] = new Host(2, start, sim_time);
-		setConnection(hosts[0], hosts[1], 9000);
-		setConnection(hosts[1], hosts[2], 9001);
-		setConnection(hosts[2], hosts[0], 9002);
+		setConnection(hosts[0], hosts[1], 9003);
+		setConnection(hosts[1], hosts[2], 9004);
+		setConnection(hosts[2], hosts[0], 9005);
 	}
 	
 	public static double exp_random(double lambda) {
