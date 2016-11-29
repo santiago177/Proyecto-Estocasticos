@@ -1,15 +1,47 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import processing.core.*;
 
-public class Simulation {
+class Color {
+	float r, g, b;
+	Color(int r, int g, int b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+}
+
+public class Simulation extends PApplet{
 	
 	public volatile static HostData[] data;
 	static Host hosts[];
+	static int max_x = 1000;
+	static int max_y = 700;
+	static Color colors[];
 	static long sim_time = 180000; // 180000 ms = 3 minutos
 	static long extra = 2000;
 	static long st;
 	static int agents = 3;
+	
+	@Override
+    public void settings() {
+        size(max_x, max_y);
+        
+    }
+	
+	@Override
+    public void draw() {    
+		float r = 30;
+        background(0);
+        noStroke();
+        translate(max_x/2, max_y/2);
+        for(int i = 0; i < data.length; i++) {
+        	fill(colors[(i+3)%7].r, colors[(i+3)%7].g, colors[(i+3)%7].b);
+        	//System.out.printf("here %f %f %f %f\n", (float)data[i].position.x, (float)data[i].position.y, data[i].position.x, data[i].position.y);
+        	ellipse((float)data[i].position.x, (float)data[i].position.y, r, r);        	
+        }
+    }
 	
 	public static void setConnection(Host src, Host dst, int port) {
 		src.out.add(port);
@@ -19,12 +51,20 @@ public class Simulation {
 	
 	public static void init() {
 		long start = System.currentTimeMillis();
+		colors = new Color[7];
+		int[] r = {1, 0, 0, 1, 0, 1, 1};
+        int[] g = {0, 1, 0, 1, 1, 0, 1};
+        int[] b = {0, 0, 1, 1, 1, 1, 0};
+        for(int i = 0; i < 7; i++) {
+        	colors[i] = new Color(255*r[i], 255*g[i], 255*b[i]);
+        }
+		
 		hosts = new Host[agents];
 		data = new HostData[agents];
 		st = start;
-		data[0] = new HostData(new Vec(0, 0), new Vec(0, 2), new Vec(1, 1), 15, 10); //proceso llegada
-		data[1] = new HostData(new Vec(0, 0), new Vec(1, -2), new Vec(1, 1), 20, 23);
-		data[2] = new HostData(new Vec(0, 0), new Vec(1, 3), new Vec(1, 1), 18, 15);
+		data[0] = new HostData(new Vec(0, 0), new Vec(0, 0.2), new Vec(0.1, 0.1), 15, 10); //proceso llegada
+		data[1] = new HostData(new Vec(0, 0), new Vec(0.1, -0.2), new Vec(0.1, 0.1), 20, 23);
+		data[2] = new HostData(new Vec(0, 0), new Vec(0.1, 0.3), new Vec(0.1, 0.1), 18, 15);
 		hosts[0] = new Host(0, start, sim_time);	
 		hosts[1] = new Host(1, start, sim_time);
 		hosts[2] = new Host(2, start, sim_time);
@@ -79,11 +119,13 @@ public class Simulation {
 			threads[i].start();
 		}
 		
+		PApplet.main(Simulation.class.getCanonicalName());
+		
 		while(System.currentTimeMillis() < st + sim_time + extra) {
 			
 		}
 		
-		write_report();
+		write_report();			
 		
 		System.out.println("out");
 	}

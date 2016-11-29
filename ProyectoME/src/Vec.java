@@ -16,6 +16,7 @@ public class Vec {
 	
 	public Vec normalize() {
 		double n = norm(this);
+		//System.out.println("norm "+n);
 		return new Vec(x/n, y/n);
 	}
 }

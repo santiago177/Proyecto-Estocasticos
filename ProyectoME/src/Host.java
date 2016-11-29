@@ -51,7 +51,7 @@ public class Host implements Runnable{
 					Vec speed = Simulation.data[id].speed;
 					pos.x += speed.x;
 					pos.y += speed.y;
-					//System.out.printf("id %d position  %f %f speed %f %f\n", id, pos.x, pos.y, speed.x, speed.y);
+					System.out.printf("id %d position  %f %f speed %f %f\n", id, pos.x, pos.y, speed.x, speed.y);
 				}
 				Thread.sleep(30);				
 			}
