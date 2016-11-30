@@ -47,7 +47,7 @@ public class Simulation extends PApplet{
         noStroke();
         translate(max_x/2, max_y/2);
         for(int i = 0; i < data.length; i++) {
-        	fill(colors[(i+3)%7].r, colors[(i+3)%7].g, colors[(i+3)%7].b);
+        	fill(colors[i%7].r, colors[i%7].g, colors[i%7].b);
         	//System.out.printf("here %f %f %f %f\n", (float)data[i].position.x, (float)data[i].position.y, data[i].position.x, data[i].position.y);
         	ellipse((float)data[i].position.x, (float)data[i].position.y, r, r);        	
         }

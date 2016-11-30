@@ -25,12 +25,12 @@ public class NIC implements Runnable{
 	
 	@Override
 	public void run() {
-		System.out.println("at nic run");
+		//System.out.println("at nic run");
 		try {
 			if(type.equals("client")) {
 				Socket client = new Socket("127.0.0.1", port);
 				BufferedReader bf = new BufferedReader(new InputStreamReader(client.getInputStream()));
-				System.out.println("waiting");
+				//System.out.println("waiting");
 				String msg;
 				while((msg = bf.readLine()) != null && System.currentTimeMillis() < start + dur) {
 					HostData data = Simulation.data[id];
@@ -49,7 +49,7 @@ public class NIC implements Runnable{
 				client.close();
 			}
 			else { // Server
-				System.out.println("at server");
+				//System.out.println("at server");
 				ServerSocket ss = new ServerSocket(port);
 				Socket server = ss.accept();
 				PrintWriter pw = new PrintWriter(server.getOutputStream(), true);
