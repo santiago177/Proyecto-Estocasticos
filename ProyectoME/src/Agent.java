@@ -3,7 +3,7 @@ public class Agent implements Runnable {
 	int id;
 	long start, dur;
 	static final double[] prob = {0.3, 0.3, 0.3, 0.1};//0 = accelerate, 1 = deaccelerate, 2 = change direction, 3 = do nothing
-	static final double max_dist = 500;
+	public static double max_dist = 500;
 	static final double tol = 50;
 	
 	Agent(int id, long start, long dur) {

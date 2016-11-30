@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import processing.core.*;
 
 class Color {
@@ -26,7 +30,7 @@ public class Simulation extends PApplet{
 	static long extra = 2000;
 	static long st;
 	static int agents = 3;
-	static int port = 9000;
+	static int port = 9007;
 	private static double lambda = 15;
 	private static double mu = 11;
 	
@@ -58,11 +62,9 @@ public class Simulation extends PApplet{
 	public static void init() {
 		long start = System.currentTimeMillis();
 		colors = new Color[7];
-		int[] r = {1, 0, 0, 1, 0, 1, 1};
-        int[] g = {0, 1, 0, 1, 1, 0, 1};
-        int[] b = {0, 0, 1, 1, 1, 1, 0};
+
         for(int i = 0; i < 7; i++) {
-        	colors[i] = new Color(255*r[i], 255*g[i], 255*b[i]);
+        	colors[i] = new Color((int)Agent.uniform_random(0, 255), (int)Agent.uniform_random(0, 255), (int)Agent.uniform_random(0, 255));
         }
 		
 		hosts = new Host[agents];
@@ -95,7 +97,7 @@ public class Simulation extends PApplet{
 				System.out.println("writing "+i);
 				File f = new File(String.format("host%d.txt", i));
 				PrintWriter pw = new PrintWriter(new FileWriter(f));
-				pw.printf("Sent packets %d\nReceived packets %d\n", data[i].sent_packets, data[i].read_packets);
+				pw.printf("Sent packets %d\nProcessed packets %d\n", data[i].sent_packets, data[i].read_packets);
 				pw.println("Holding times");
 				for(long l: data[i].holding_times) {
 					pw.println(l);
@@ -117,14 +119,64 @@ public class Simulation extends PApplet{
 	}
 	
 	public static void main(String[] args) {
-		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Ingresar numero de agentes y el puerto inicial.");
 		try {
-			String[] in = bf.readLine().split(" ");
-			agents = Integer.parseInt(in[0]);
-			port = Integer.parseInt(in[1]);
-		} catch (IOException e) {
-			e.printStackTrace();
+			BufferedReader bf = new BufferedReader(new FileReader(new File("simulation.config")));		
+			String lines = "", temp;
+			while((temp = bf.readLine()) != null) {
+				lines += temp;
+			}
+			Pattern number = Pattern.compile("[0-9]+");
+			Pattern agp = Pattern.compile("agents=[0-9]+");
+			Pattern portp = Pattern.compile("port=[0-9]+");
+			Pattern lambdap = Pattern.compile("lambda=[0-9]+");
+			Pattern mup = Pattern.compile("mu=[0-9]+");
+			Pattern sim_timep = Pattern.compile("sim_time=[0-9]+");
+			Pattern maxdistp = Pattern.compile("max_dist=[0-9]+");
+			Matcher matcher = agp.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				agents = Integer.parseInt(tempmatch.group());
+				System.out.println("agents "+agents);
+			}
+			matcher = portp.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				port = Integer.parseInt(tempmatch.group());
+				System.out.println("port "+port);
+			}	
+			matcher = lambdap.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				lambda = Double.parseDouble(tempmatch.group());
+				System.out.println("lambda "+lambda);
+			}	
+			matcher = mup.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				mu = Double.parseDouble(tempmatch.group());
+				System.out.println("mu "+mu);
+			}	
+			matcher = sim_timep.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				sim_time = Long.parseLong(tempmatch.group());
+				System.out.println("sim_time "+sim_time);
+			}	
+			matcher = maxdistp.matcher(lines);
+			if(matcher.find()) {
+				Matcher tempmatch = number.matcher(matcher.group());
+				tempmatch.find();		
+				Agent.max_dist = Double.parseDouble(tempmatch.group());
+				System.out.println("max_dist "+Agent.max_dist);
+			}	
+			bf.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 		}
 		
 		Thread threads[] = new Thread[agents];	

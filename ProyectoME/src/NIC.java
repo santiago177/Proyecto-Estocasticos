@@ -33,9 +33,7 @@ public class NIC implements Runnable{
 				System.out.println("waiting");
 				String msg;
 				while((msg = bf.readLine()) != null && System.currentTimeMillis() < start + dur) {
-					//System.out.printf("port %d Received %s id %d\n", port, msg, id);
 					HostData data = Simulation.data[id];
-					//System.out.println(System.currentTimeMillis() - start+" in client added");
 					Simulation.data[id].holding_times.add(System.currentTimeMillis() - start);
 					data.read_packets++;
 					double net_delay = data.hold_delay;
@@ -43,7 +41,7 @@ public class NIC implements Runnable{
 					long r2 = (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
 					//System.out.printf("r1 %d r2 %d\n", r1, r2);
 					long delay = (long)(r1 + r2);
-					//System.out.printf("%d client delay %d\n", id, delay);
+					//System.out.printf("%d client delay %d base %f\n", id, delay, data.hold_delay);
 					Thread.sleep(delay);
 				}
 				//System.out.printf("%d client closed\n", id);
@@ -66,7 +64,7 @@ public class NIC implements Runnable{
 					double net_delay = data.send_delay;
 					long r1 = (long)(Simulation.exp_random(1.0/net_delay));
 					long delay = r1 + (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
-					//System.out.printf("%d server delay %d net_delay %f r %d\n", id, delay, net_delay, r1);
+					//System.out.printf("%d server delay %d net_delay %f r %d base %f\n", id, delay, net_delay, r1, data.send_delay);
 					Thread.sleep(delay);							
 				}
 				//System.out.printf("%d server closed\n", id);

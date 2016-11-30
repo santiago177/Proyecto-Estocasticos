@@ -1,4 +1,4 @@
-Sent packets 8778
+Sent packets 487
 Received packets 0
 Holding times
 Arrival times
