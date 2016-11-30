@@ -96,7 +96,9 @@ public class Simulation extends PApplet{
 			try {
 				System.out.println("writing "+i);
 				File f = new File(String.format("host%d.txt", i));
+				File f2 = new File(String.format("random%d.txt", i));
 				PrintWriter pw = new PrintWriter(new FileWriter(f));
+				PrintWriter pw2 = new PrintWriter(new FileWriter(f2));
 				pw.printf("Sent packets %d\nProcessed packets %d\n", data[i].sent_packets, data[i].read_packets);
 				pw.println("Holding times");
 				for(long l: data[i].holding_times) {
@@ -111,6 +113,13 @@ public class Simulation extends PApplet{
 					pw.println(l);
 				}
 				pw.close();
+				pw2.println("Holding random");
+				for(long l: data[i].random_holding)
+					pw2.println(l);
+				pw2.println("Arrival random");
+				for(long l: data[i].random_arrival)
+					pw2.println(l);
+				pw2.close();
 			}
 			catch(Exception e) {
 				e.printStackTrace();

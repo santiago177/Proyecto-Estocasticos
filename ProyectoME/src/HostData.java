@@ -10,7 +10,8 @@ public class HostData {
 	int target;
 	ArrayList<Long> holding_times;
 	ArrayList<Long> arrival_times;
-	
+	ArrayList<Long> random_holding;
+	ArrayList<Long> random_arrival;
 	
 	public HostData(Vec position, Vec speed, Vec accel, double hold_delay, double send_delay) {
 		this.position = position;
@@ -22,7 +23,7 @@ public class HostData {
 		this.send_delay = send_delay;
 		holding_times = new ArrayList<>();
 		arrival_times = new ArrayList<>();
+		random_arrival = new ArrayList<>();
+		random_holding = new ArrayList<>();
 	}
-	
-	
 }

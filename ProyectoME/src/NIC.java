@@ -41,6 +41,7 @@ public class NIC implements Runnable{
 					long r2 = (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
 					//System.out.printf("r1 %d r2 %d\n", r1, r2);
 					long delay = (long)(r1 + r2);
+					Simulation.data[id].random_holding.add(delay);
 					//System.out.printf("%d client delay %d base %f\n", id, delay, data.hold_delay);
 					Thread.sleep(delay);
 				}
@@ -65,6 +66,7 @@ public class NIC implements Runnable{
 					long r1 = (long)(Simulation.exp_random(1.0/net_delay));
 					long delay = r1 + (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
 					//System.out.printf("%d server delay %d net_delay %f r %d base %f\n", id, delay, net_delay, r1, data.send_delay);
+					Simulation.data[target].random_arrival.add(delay);
 					Thread.sleep(delay);							
 				}
 				//System.out.printf("%d server closed\n", id);
