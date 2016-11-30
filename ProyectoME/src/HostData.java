@@ -12,7 +12,7 @@ public class HostData {
 	ArrayList<Long> arrival_times;
 	
 	
-	public HostData(Vec position, Vec speed, Vec accel, int hold_delay, int send_delay) {
+	public HostData(Vec position, Vec speed, Vec accel, double hold_delay, double send_delay) {
 		this.position = position;
 		this.speed = speed;
 		this.accel = accel;

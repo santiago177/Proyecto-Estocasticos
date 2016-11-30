@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import processing.core.*;
 
@@ -23,6 +26,9 @@ public class Simulation extends PApplet{
 	static long extra = 2000;
 	static long st;
 	static int agents = 3;
+	static int port = 9000;
+	private static double lambda = 15;
+	private static double mu = 11;
 	
 	@Override
     public void settings() {
@@ -62,15 +68,19 @@ public class Simulation extends PApplet{
 		hosts = new Host[agents];
 		data = new HostData[agents];
 		st = start;
-		data[0] = new HostData(new Vec(0, 0), new Vec(0, 0.2), new Vec(0.1, 0.1), 15, 10); //proceso llegada
-		data[1] = new HostData(new Vec(0, 0), new Vec(0.1, -0.2), new Vec(0.1, 0.1), 20, 23);
-		data[2] = new HostData(new Vec(0, 0), new Vec(0.1, 0.3), new Vec(0.1, 0.1), 18, 15);
-		hosts[0] = new Host(0, start, sim_time);	
+		//data[0] = new HostData(new Vec(0, 0), new Vec(Agent.uniform_random(-1, 1), Agent.uniform_random(-1, 1)), new Vec(Agent.uniform_random(-0.5, 0.5), Agent.uniform_random(-0.5, 0.5)), mu, lambda); //proceso llegada
+		//data[1] = new HostData(new Vec(0, 0), new Vec(Agent.uniform_random(-1, 1), Agent.uniform_random(-1, 1)), new Vec(Agent.uniform_random(-0.5, 0.5), Agent.uniform_random(-0.5, 0.5)), mu, lambda);
+		//data[2] = new HostData(new Vec(0, 0), new Vec(Agent.uniform_random(-1, 1), Agent.uniform_random(-1, 1)), new Vec(Agent.uniform_random(-0.5, 0.5), Agent.uniform_random(-0.5, 0.5)), mu, lambda);
+		for(int i = 0; i < agents; i++) {
+			data[i] = new HostData(new Vec(0, 0), new Vec(Agent.uniform_random(-1, 1), Agent.uniform_random(-1, 1)), new Vec(Agent.uniform_random(-0.5, 0.5), Agent.uniform_random(-0.5, 0.5)), mu, lambda); //proceso llegada
+			hosts[i] = new Host(i, start, sim_time);	
+		}
+		/*hosts[0] = new Host(0, start, sim_time);	
 		hosts[1] = new Host(1, start, sim_time);
-		hosts[2] = new Host(2, start, sim_time);
-		setConnection(hosts[0], hosts[1], 9003);
-		setConnection(hosts[1], hosts[2], 9004);
-		setConnection(hosts[2], hosts[0], 9005);
+		hosts[2] = new Host(2, start, sim_time);*/
+		for(int i = 0; i < hosts.length-1; i++) {
+			setConnection(hosts[i], hosts[i+1], port++);
+		}
 	}
 	
 	public static double exp_random(double lambda) {
@@ -82,12 +92,13 @@ public class Simulation extends PApplet{
 	private static void write_report() {
 		for(int i = 0; i < data.length; i++) {
 			try {
-					System.out.println("writing "+i);
-					File f = new File(String.format("host%d.txt", i));
-					PrintWriter pw = new PrintWriter(new FileWriter(f));
-					pw.println("Holding times");
-					for(long l: data[i].holding_times) {
-						pw.println(l);
+				System.out.println("writing "+i);
+				File f = new File(String.format("host%d.txt", i));
+				PrintWriter pw = new PrintWriter(new FileWriter(f));
+				pw.printf("Sent packets %d\nReceived packets %d\n", data[i].sent_packets, data[i].read_packets);
+				pw.println("Holding times");
+				for(long l: data[i].holding_times) {
+					pw.println(l);
 				}
 				pw.println("Arrival times");
 				if(data[i] == null)
@@ -105,8 +116,18 @@ public class Simulation extends PApplet{
 		}
 	}
 	
-	public static void main(String[] args) {		
-		Thread threads[] = new Thread[agents];
+	public static void main(String[] args) {
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Ingresar numero de agentes y el puerto inicial.");
+		try {
+			String[] in = bf.readLine().split(" ");
+			agents = Integer.parseInt(in[0]);
+			port = Integer.parseInt(in[1]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Thread threads[] = new Thread[agents];	
 		init();
 		
 		//setConnection(hosts[1], hosts[0], 9001);

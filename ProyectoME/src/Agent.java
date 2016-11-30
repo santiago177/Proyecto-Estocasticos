@@ -3,7 +3,7 @@ public class Agent implements Runnable {
 	int id;
 	long start, dur;
 	static final double[] prob = {0.3, 0.3, 0.3, 0.1};//0 = accelerate, 1 = deaccelerate, 2 = change direction, 3 = do nothing
-	static final double max_dist = 200;
+	static final double max_dist = 500;
 	static final double tol = 50;
 	
 	Agent(int id, long start, long dur) {
@@ -16,7 +16,7 @@ public class Agent implements Runnable {
 		return Math.sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
 	}
 	
-	public double uniform_random(double a, double b) {
+	public static double uniform_random(double a, double b) {
 		return a + Math.random()*(b - a);
 	}
 	
@@ -39,7 +39,7 @@ public class Agent implements Runnable {
 					continue;
 				max = Math.max(max, distance(Simulation.data[id].position, Simulation.data[i].position));			
 			}
-			System.out.printf("id %d max %f\n", id, max);
+			//System.out.printf("id %d max %f\n", id, max);
 			if(outOfScreen()) {
 				if(n == 2)
 					return 1;
@@ -103,7 +103,6 @@ public class Agent implements Runnable {
 				new_speed.x = reb;
 			}
 			if(Simulation.data[id].position.y > Simulation.max_y/2-tol) {
-				System.out.println("here");
 				new_speed.y = -reb;
 			}
 			if(Simulation.data[id].position.y < -Simulation.max_y/2+tol) {
@@ -129,7 +128,7 @@ public class Agent implements Runnable {
 						best = i;
 					}
 				}
-				System.out.println("best "+best);
+				//System.out.println("best "+best);
 				execute(best);
 				Thread.sleep(50);
 			}

@@ -37,6 +37,7 @@ public class NIC implements Runnable{
 					HostData data = Simulation.data[id];
 					//System.out.println(System.currentTimeMillis() - start+" in client added");
 					Simulation.data[id].holding_times.add(System.currentTimeMillis() - start);
+					data.read_packets++;
 					double net_delay = data.hold_delay;
 					long r1 = (long)(Simulation.exp_random(1.0/net_delay));
 					long r2 = (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);
@@ -61,6 +62,7 @@ public class NIC implements Runnable{
 					HostData data = Simulation.data[id];
 					//System.out.println(System.currentTimeMillis() - start+" in server added");
 					Simulation.data[target].arrival_times.add(System.currentTimeMillis() - start);
+					Simulation.data[id].sent_packets++;
 					double net_delay = data.send_delay;
 					long r1 = (long)(Simulation.exp_random(1.0/net_delay));
 					long delay = r1 + (long)(Agent.distance(data.position, Simulation.data[data.target].position)*time_per_unit);

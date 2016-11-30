@@ -31,7 +31,6 @@ public class Host implements Runnable{
 			agent_thread.start();
 			
 			for(int i = 0; i < out.size(); i++) {
-				System.out.println("here");
 				NIC nic = new NIC("server", out.get(i), id, start, dur, target.get(i));
 				Thread t = new Thread(nic);
 				t.setPriority(Thread.MAX_PRIORITY);
@@ -51,7 +50,7 @@ public class Host implements Runnable{
 					Vec speed = Simulation.data[id].speed;
 					pos.x += speed.x;
 					pos.y += speed.y;
-					System.out.printf("id %d position  %f %f speed %f %f\n", id, pos.x, pos.y, speed.x, speed.y);
+					//System.out.printf("id %d position  %f %f speed %f %f\n", id, pos.x, pos.y, speed.x, speed.y);
 				}
 				Thread.sleep(30);				
 			}
